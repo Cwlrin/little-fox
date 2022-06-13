@@ -170,6 +170,12 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.vladfaust.unitywakatime": {
+      "version": "file:E:/Git Clone/unity-wakatime-2.4.0/unity-wakatime-2.4.0/Assets/com.vladfaust.unitywakatime",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
