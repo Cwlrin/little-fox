@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
+    public Animator anim;
     public float speed;
     public float jumpForce;
 
@@ -27,11 +28,15 @@ public class PlayerController : MonoBehaviour
         // 定义调整朝向方向的参数
         var faceDircetion = Input.GetAxisRaw("Horizontal");
 
-        // 横向移动
-        if (horizonalMove != 0) rb.velocity = new Vector2(horizonalMove * speed * Time.deltaTime, rb.velocity.y);
-        // 转向
+        // 角色移动
+        if (horizonalMove != 0)
+        {
+            rb.velocity = new Vector2(horizonalMove * speed * Time.deltaTime, rb.velocity.y);
+            anim.SetFloat("running", Mathf.Abs(faceDircetion));
+        }
+        // 角色转向
         if (faceDircetion != 0) transform.localScale = new Vector3(faceDircetion, 1, 1);
-        // 跳跃
+        // 角色跳跃
         if (Input.GetButtonDown("Jump")) rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
     }
 }
