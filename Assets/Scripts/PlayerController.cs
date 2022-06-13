@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
+    public float speed;
+    public float jumpForce;
 
-    public float speed = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,21 +15,23 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Movement();
     }
 
-    void Movement()
+    private void Movement()
     {
-        float horizonalMove;
-
         // 获取移动参数
-        horizonalMove = Input.GetAxis("Horizontal");
+        var horizonalMove = Input.GetAxis("Horizontal");
+        // 定义调整朝向方向的参数
+        var faceDircetion = Input.GetAxisRaw("Horizontal");
+
         // 横向移动
-        if (horizonalMove != 0)
-        {
-            rb.velocity = new Vector2(horizonalMove * speed, rb.velocity.y);
-        }
+        if (horizonalMove != 0) rb.velocity = new Vector2(horizonalMove * speed * Time.deltaTime, rb.velocity.y);
+        // 转向
+        if (faceDircetion != 0) transform.localScale = new Vector3(faceDircetion, 1, 1);
+        // 跳跃
+        if (Input.GetButtonDown("Jump")) rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
     }
 }
