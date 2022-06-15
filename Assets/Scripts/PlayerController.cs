@@ -1,42 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
     public Animator anim;
+    public Collider2D coll;
     public float speed;
     public float jumpForce;
+    public LayerMask ground;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         Movement();
+        SwichAmim();
     }
 
     private void Movement()
     {
-        // »ñÈ¡ÒÆ¶¯²ÎÊı
-        var horizonalMove = Input.GetAxis("Horizontal");
-        // ¶¨Òåµ÷Õû³¯Ïò·½ÏòµÄ²ÎÊı
-        var faceDircetion = Input.GetAxisRaw("Horizontal");
+        // è·å–ç§»åŠ¨å‚æ•°
+        var horizontalMove = Input.GetAxis("Horizontal");
+        // å®šä¹‰è°ƒæ•´æœå‘æ–¹å‘çš„å‚æ•°
+        var faceDirection = Input.GetAxisRaw("Horizontal");
 
-        // ½ÇÉ«ÒÆ¶¯
-        if (horizonalMove != 0)
+        // è§’è‰²ç§»åŠ¨
+        if (horizontalMove != 0)
         {
-            rb.velocity = new Vector2(horizonalMove * speed * Time.deltaTime, rb.velocity.y);
-            anim.SetFloat("running", Mathf.Abs(faceDircetion));
+            rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, rb.velocity.y);
+            anim.SetFloat("running", Mathf.Abs(faceDirection));
         }
-        // ½ÇÉ«×ªÏò
-        if (faceDircetion != 0) transform.localScale = new Vector3(faceDircetion, 1, 1);
-        // ½ÇÉ«ÌøÔ¾
-        if (Input.GetButtonDown("Jump")) rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
+
+        // è§’è‰²è½¬å‘
+        if (faceDirection != 0) transform.localScale = new Vector3(faceDirection, 1, 1);
+        // è§’è‰²è·³è·ƒ
+        if (Input.GetButtonDown("Jump"))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
+            anim.SetBool("jumping", true);
+        }
+    }
+
+    private void SwichAmim()
+    {
+        anim.SetBool("idle", false);
+
+        if (anim.GetBool("jumping"))
+        {
+            if (rb.velocity.y < 0)
+            {
+                anim.SetBool("jumping", false);
+                anim.SetBool("falling", true);
+            }
+        }
+        else if (coll.IsTouchingLayers(ground))
+        {
+            anim.SetBool("falling", false);
+            anim.SetBool("idle", true);
+        }
     }
 }
