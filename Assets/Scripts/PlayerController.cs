@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     private void SwichAmim()
     {
         anim.SetBool("idle", false);
-
+        // 动画切换
         if (anim.GetBool("jumping"))
         {
             if (rb.velocity.y < 0)
