@@ -4,19 +4,19 @@ public class PlayerController : MonoBehaviour
 {   
     private Rigidbody2D rb;
     private Animator anim;
+
     public Collider2D coll;
     public float speed;
     public float jumpForce;
     public LayerMask ground;
+    public int Cherry;
 
-    // Start is called before the first frame update
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     private void FixedUpdate()
     {
         Movement();
@@ -63,6 +63,15 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("falling", false);
             anim.SetBool("idle", true);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Collection")
+        {
+            Destroy(collision.gameObject);
+            Cherry += 1;
         }
     }
 }
