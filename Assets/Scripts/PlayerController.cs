@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         // 角色转向
         if (faceDirection != 0) transform.localScale = new Vector3(faceDirection, 1, 1);
         // 角色跳跃
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
             anim.SetBool("jumping", true);
