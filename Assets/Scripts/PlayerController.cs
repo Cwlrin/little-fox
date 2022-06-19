@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Net.Mime;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {   
@@ -10,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public LayerMask ground;
     public int Cherry;
+
+    public Text CherryNum;
 
     private void Start()
     {
@@ -47,10 +51,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // 动画切换
     private void SwichAmim()
     {
         anim.SetBool("idle", false);
-        // 动画切换
+        
         if (anim.GetBool("jumping"))
         {
             if (rb.velocity.y < 0)
@@ -66,12 +71,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // 收集物品
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Collection")
         {
             Destroy(collision.gameObject);
             Cherry += 1;
+            CherryNum.text = Cherry.ToString();
         }
     }
 }
