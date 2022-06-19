@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
-{   
+{
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     private void SwichAmim()
     {
         anim.SetBool("idle", false);
-        
+
         if (anim.GetBool("jumping"))
         {
             if (rb.velocity.y < 0)
@@ -72,13 +72,27 @@ public class PlayerController : MonoBehaviour
     }
 
     // 收集物品
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collision.tag == "Collection")
+        if (collider.tag == "Collection")
         {
-            Destroy(collision.gameObject);
+            Destroy(collider.gameObject);
             Cherry += 1;
             CherryNum.text = Cherry.ToString();
+        }
+    }
+
+    // 消灭敌人
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (anim.GetBool("falling"))
+        {
+            if (collision.gameObject.tag == "Enemy")
+            {
+                Destroy(collision.gameObject);
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
+                anim.SetBool("jumping", true);
+            }
         }
     }
 }
