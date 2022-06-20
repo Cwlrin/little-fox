@@ -4,26 +4,33 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private Animator anim;
+    private Rigidbody2D _rb;
+    private Animator _anim;
+
+    private bool _isHurt;
 
     public Collider2D coll;
+    [Space]
     public float speed;
     public float jumpForce;
+    [Space]
     public LayerMask ground;
-    public int Cherry;
+    public int cherry;
 
-    public Text CherryNum;
+    public Text cherryNum;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        _rb = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
     {
-        Movement();
+        if (!_isHurt)
+        {
+            Movement();
+        }
         SwichAmim();
     }
 
@@ -37,8 +44,8 @@ public class PlayerController : MonoBehaviour
         // 角色移动
         if (horizontalMove != 0)
         {
-            rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, rb.velocity.y);
-            anim.SetFloat("running", Mathf.Abs(faceDirection));
+            _rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, _rb.velocity.y);
+            _anim.SetFloat("running", Mathf.Abs(faceDirection));
         }
 
         // 角色转向
@@ -46,28 +53,39 @@ public class PlayerController : MonoBehaviour
         // 角色跳跃
         if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
-            anim.SetBool("jumping", true);
+            _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
+            _anim.SetBool("jumping", true);
         }
     }
 
     // 动画切换
     private void SwichAmim()
     {
-        anim.SetBool("idle", false);
+        _anim.SetBool("idle", false);
 
-        if (anim.GetBool("jumping"))
+        if (_anim.GetBool("jumping"))
         {
-            if (rb.velocity.y < 0)
+            if (_rb.velocity.y < 0)
             {
-                anim.SetBool("jumping", false);
-                anim.SetBool("falling", true);
+                _anim.SetBool("jumping", false);
+                _anim.SetBool("falling", true);
+            }
+        }
+        else if (_isHurt)
+        {
+            _anim.SetBool("hurt",true);
+            _anim.SetFloat("running",0);
+            if (Mathf.Abs(_rb.velocity.x) < 0.1)
+            {
+                _anim.SetBool("hurt",false);
+                _anim.SetBool("idle",true);
+                _isHurt = false;
             }
         }
         else if (coll.IsTouchingLayers(ground))
         {
-            anim.SetBool("falling", false);
-            anim.SetBool("idle", true);
+            _anim.SetBool("falling", false);
+            _anim.SetBool("idle", true);
         }
     }
 
@@ -77,21 +95,31 @@ public class PlayerController : MonoBehaviour
         if (collider.tag == "Collection")
         {
             Destroy(collider.gameObject);
-            Cherry += 1;
-            CherryNum.text = Cherry.ToString();
+            cherry += 1;
+            cherryNum.text = cherry.ToString();
         }
     }
 
     // 消灭敌人
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (anim.GetBool("falling"))
+        if (collision.gameObject.tag == "Enemy")
         {
-            if (collision.gameObject.tag == "Enemy")
+            if (_anim.GetBool("falling"))
             {
                 Destroy(collision.gameObject);
-                rb.velocity = new Vector2(rb.velocity.x, jumpForce * Time.deltaTime);
-                anim.SetBool("jumping", true);
+                _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
+                _anim.SetBool("jumping", true);
+            }
+            else if (transform.position.x < collision.gameObject.transform.position.x)
+            {
+                _rb.velocity = new Vector2(-5, _rb.velocity.y);
+                _isHurt = true;
+            }
+            else if (transform.position.x > collision.gameObject.transform.position.x)
+            {
+                _rb.velocity = new Vector2(5, _rb.velocity.y);
+                _isHurt = true;
             }
         }
     }
