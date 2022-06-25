@@ -63,6 +63,12 @@ public class PlayerController : MonoBehaviour
     {
         _anim.SetBool("idle", false);
 
+        // 当角色空中掉落时，切换为下落动画
+        if (_rb.velocity.y < 0.1f && !coll.IsTouchingLayers(ground))
+        {
+            _anim.SetBool("falling",true);
+        }
+        // 当角色跳跃时
         if (_anim.GetBool("jumping"))
         {
             if (_rb.velocity.y < 0)
@@ -71,6 +77,7 @@ public class PlayerController : MonoBehaviour
                 _anim.SetBool("falling", true);
             }
         }
+        // 当角色受到伤害时
         else if (_isHurt)
         {
             _anim.SetBool("hurt",true);
@@ -82,6 +89,7 @@ public class PlayerController : MonoBehaviour
                 _isHurt = false;
             }
         }
+        // 当角色接触到地面时
         else if (coll.IsTouchingLayers(ground))
         {
             _anim.SetBool("falling", false);

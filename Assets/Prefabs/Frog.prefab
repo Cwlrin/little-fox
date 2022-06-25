@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5082292375686583764}
   - component: {fileID: 5082292375686583723}
   - component: {fileID: 5082292375686583767}
+  - component: {fileID: -3233760696690647753}
   m_Layer: 0
   m_Name: Frog
   m_TagString: Enemy
@@ -139,6 +140,25 @@ MonoBehaviour:
   leftpoint: {fileID: 5082292377493672769}
   rightpoint: {fileID: 5082292376729379248}
   speed: 5
+--- !u!95 &-3233760696690647753
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5082292375686583766}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f59b0e698c627ac41a0616598d4ad927, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5082292376729379251
 GameObject:
   m_ObjectHideFlags: 0
