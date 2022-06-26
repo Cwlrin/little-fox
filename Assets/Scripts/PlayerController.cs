@@ -113,9 +113,10 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             if (_anim.GetBool("falling"))
             {
-                Destroy(collision.gameObject);
+                enemy.JumpOn();
                 _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
                 _anim.SetBool("jumping", true);
             }
@@ -131,4 +132,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
 }
