@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour
     private Animator _anim;
 
     private bool _isHurt;
-
+    public Transform cellingCheck;
     public Collider2D coll;
+    public Collider2D disColl;
     [Space]
     public float speed;
     public float jumpForce;
@@ -17,7 +18,6 @@ public class PlayerController : MonoBehaviour
     public LayerMask ground;
     [Space]
     public int cherry;
-
     public Text cherryNum;
     [Space]
     public AudioSource jumpAudio;
@@ -50,19 +50,20 @@ public class PlayerController : MonoBehaviour
         // 角色移动
         if (horizontalMove != 0)
         {
-            _rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, _rb.velocity.y);
+            _rb.velocity = new Vector2(horizontalMove * speed * Time.fixedDeltaTime, _rb.velocity.y);
             _anim.SetFloat("running", Mathf.Abs(faceDirection));
         }
 
         // 角色转向
         if (faceDirection != 0) transform.localScale = new Vector3(faceDirection, 1, 1);
         // 角色跳跃
-        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
+        if (Input.GetButton("Jump") && coll.IsTouchingLayers(ground))
         {
             _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
             jumpAudio.Play();
             _anim.SetBool("jumping", true);
         }
+        Crouch();
     }
 
     // 动画切换
@@ -141,6 +142,24 @@ public class PlayerController : MonoBehaviour
                 _rb.velocity = new Vector2(5, _rb.velocity.y);
                 hurtAudio.Play();
                 _isHurt = true;
+            }
+        }
+    }
+
+    // 判断趴下
+    void Crouch()
+    {
+        //if (!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
+        {
+            if (Input.GetButton("Crouch"))
+            {
+                _anim.SetBool("crouching", true);
+                disColl.enabled = false;
+            }
+            else
+            {
+                _anim.SetBool("crouching", false);
+                disColl.enabled = true;
             }
         }
     }
