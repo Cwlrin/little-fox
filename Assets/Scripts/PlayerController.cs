@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -105,15 +106,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 收集物品
+    // 碰撞触发器
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "Collection")
+        // 碰撞樱桃
+        if (collider.CompareTag("Collection"))
         {
             cherryAudio.Play();
             Destroy(collider.gameObject);
             cherry += 1;
             cherryNum.text = cherry.ToString();
+        }
+
+        if (collider.CompareTag("DeadLine"))
+        {
+            GetComponent<AudioSource>().enabled=false;
+            Invoke(nameof(ReStart), 2f);
         }
     }
 
@@ -149,7 +157,7 @@ public class PlayerController : MonoBehaviour
     // 判断趴下
     void Crouch()
     {
-        //if (!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
+        if (!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
         {
             if (Input.GetButton("Crouch"))
             {
@@ -164,4 +172,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void ReStart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
