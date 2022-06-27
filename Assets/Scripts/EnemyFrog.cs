@@ -9,8 +9,12 @@ public class EnemyFrog : Enemy
 
     //private Animator _anim;
 
-    public Transform leftPoint, rightPoint;
-    public float speed, jumpForce;
+    public Transform leftPoint;
+    public Transform rightPoint;
+    [Space]
+    public float speed;
+    public float jumpForce;
+    [Space]
     public LayerMask ground;
 
     // @override

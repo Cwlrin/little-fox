@@ -15,9 +15,14 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     [Space]
     public LayerMask ground;
+    [Space]
     public int cherry;
 
     public Text cherryNum;
+    [Space]
+    public AudioSource jumpAudio;
+    public AudioSource hurtAudio;
+    public AudioSource cherryAudio;
 
     private void Start()
     {
@@ -34,6 +39,7 @@ public class PlayerController : MonoBehaviour
         SwichAmim();
     }
 
+    // 移动
     private void Movement()
     {
         // 获取移动参数
@@ -54,6 +60,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
         {
             _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
+            jumpAudio.Play();
             _anim.SetBool("jumping", true);
         }
     }
@@ -102,6 +109,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collider.tag == "Collection")
         {
+            cherryAudio.Play();
             Destroy(collider.gameObject);
             cherry += 1;
             cherryNum.text = cherry.ToString();
@@ -114,20 +122,24 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            // 下落时碰撞
             if (_anim.GetBool("falling"))
             {
                 enemy.JumpOn();
                 _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * Time.deltaTime);
                 _anim.SetBool("jumping", true);
             }
+            // 受伤
             else if (transform.position.x < collision.gameObject.transform.position.x)
             {
                 _rb.velocity = new Vector2(-5, _rb.velocity.y);
+                hurtAudio.Play();
                 _isHurt = true;
             }
             else if (transform.position.x > collision.gameObject.transform.position.x)
             {
                 _rb.velocity = new Vector2(5, _rb.velocity.y);
+                hurtAudio.Play();
                 _isHurt = true;
             }
         }

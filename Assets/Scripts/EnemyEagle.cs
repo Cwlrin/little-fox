@@ -7,8 +7,9 @@ public class EnemyEagle : Enemy
 
     private bool _isUp = true;
 
-    public Transform top, bottom;
-
+    public Transform top;
+    public Transform bottom;
+    [Space]
     public float speed;
 
     // @override
