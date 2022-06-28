@@ -18,8 +18,10 @@ public class PlayerController : MonoBehaviour
     [Space]
     public LayerMask ground;
     [Space]
-    public int cherry;
     public Text cherryNum;
+    [SerializeField]
+    private int _cherry;
+    
     [Space]
     public AudioSource jumpAudio;
     public AudioSource hurtAudio;
@@ -38,6 +40,11 @@ public class PlayerController : MonoBehaviour
             Movement();
         }
         SwichAmim();
+    }
+
+    private void Update()
+    {
+        cherryNum.text = _cherry.ToString();
     }
 
     // 移动
@@ -113,9 +120,10 @@ public class PlayerController : MonoBehaviour
         if (collider.CompareTag("Collection"))
         {
             cherryAudio.Play();
-            Destroy(collider.gameObject);
-            cherry += 1;
-            cherryNum.text = cherry.ToString();
+            //Destroy(collider.gameObject);
+            //_cherry += 1;
+            collider.GetComponent<Animator>().Play("IsGet");
+            //cherryNum.text = _cherry.ToString();
         }
 
         if (collider.CompareTag("DeadLine"))
@@ -159,7 +167,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
         {
-            if (Input.GetButton("Crouch"))
+            if (Input.GetButtonDown("Crouch"))
             {
                 _anim.SetBool("crouching", true);
                 disColl.enabled = false;
@@ -170,6 +178,11 @@ public class PlayerController : MonoBehaviour
                 disColl.enabled = true;
             }
         }
+    }
+
+    public void CherryCount()
+    {
+        _cherry++;
     }
 
     void ReStart()
